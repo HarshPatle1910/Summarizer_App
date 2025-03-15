@@ -1,0 +1,1 @@
+D:\FlutterProjects\AI based Text Summariser App\smart_summariser\build\app\intermediates\cxx\Debug\5p5f255j\obj\armeabi-v7a

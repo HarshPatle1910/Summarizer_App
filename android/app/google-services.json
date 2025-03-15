@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "381001197608",
+    "project_id": "smart-summarizer",
+    "storage_bucket": "smart-summarizer.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381001197608:android:9d2e99461af7660e5ded1d",
+        "android_client_info": {
+          "package_name": "com.example.smart_summariser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAn3jvk5Seh9KacnAzMW0S4zyFJ3EKcTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
