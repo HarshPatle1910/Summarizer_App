@@ -9,9 +9,9 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
-import '../bloc/summary_bloc.dart';
-import '../bloc/summary_event.dart';
-import '../bloc/summary_state.dart';
+import '../bloc/summary/summary_bloc.dart';
+import '../bloc/summary/summary_event.dart';
+import '../bloc/summary/summary_state.dart';
 
 class FileSummarizerScreen extends StatefulWidget {
   @override
