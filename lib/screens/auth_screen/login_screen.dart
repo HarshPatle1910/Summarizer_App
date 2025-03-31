@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 (context.screenHeight * 0.1).heightBox,
                 appLogoWidget(),
                 10.heightBox,
-                "Log in to $appname"
+                "Log in to $appName"
                     .text
                     .fontFamily(bold)
                     .white
@@ -64,14 +64,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {},
-                          child: forgetpassword.text.make(),
+                          child: forgetPassword.text.make(),
                         ),
                       ),
                       5.heightBox,
                       controller.isloading.value
                           ? CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation(
-                                redColor,
+                                orangeColor,
                               ),
                             )
                           : ourButton(
@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
                                   if (user != null) {
                                     VxToast.show(context, msg: loggedIn);
-                                    Get.offAll(() => const HomeScreen());
+                                    Get.offAll(() => HomeScreen());
                                   }
                                 } catch (e) {
                                   VxToast.show(
@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                                 controller.isloading(false);
                               },
-                              color: redColor,
+                              color: orangeColor,
                               textColor: whiteColor,
                               title: login,
                             ).box.width(context.screenWidth - 50).make(),
@@ -109,11 +109,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           Get.to(() => const SignUpScreen());
                         },
                         color: lightGrey,
-                        textColor: redColor,
+                        textColor: orangeColor,
                         title: signup,
                       ).box.width(context.screenWidth - 50).make(),
                       10.heightBox,
-                      loginwith.text.color(fontGrey).make(),
+                      loginWith.text.color(fontGrey).make(),
                       5.heightBox,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

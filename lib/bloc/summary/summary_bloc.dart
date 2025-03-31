@@ -15,7 +15,10 @@ class SummaryBloc extends Bloc<SummaryEvent, SummaryState> {
       SummarizeText event, Emitter<SummaryState> emit) async {
     emit(SummaryLoading());
     try {
-      final summary = await apiService.getSummary(event.text);
+      final summary = await apiService.getSummary(
+        event.text,
+        event.mode,
+      );
       emit(SummaryLoaded(summary: summary));
     } catch (e) {
       emit(SummaryError(error: e.toString()));

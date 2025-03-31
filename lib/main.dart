@@ -50,6 +50,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blueGrey,
         ),
         home: SplashScreen(),
+        // home: HistoryPage(),
       ),
     );
   }

@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (sessionActive) {
       Get.offAll(
-        () => const HomeScreen(),
+        () => HomeScreen(),
       ); // Go to HomeScreen if session is active
     } else {
       Get.offAll(
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: redColor,
+      backgroundColor: orangeColor,
       body: Center(
         child: Column(
           children: [
@@ -54,14 +54,14 @@ class _SplashScreenState extends State<SplashScreen> {
             appLogoWidget(),
             10.heightBox,
             Text(
-              appname,
+              appName,
               style: TextStyle(
                 fontFamily: bold,
                 fontSize: 34,
                 color: Colors.white,
               ),
             ),
-            appversion.text.white.make(),
+            appVersion.text.white.make(),
             Spacer(),
             credits.text.white.fontFamily(semibold).make(),
             HeightBox(30),

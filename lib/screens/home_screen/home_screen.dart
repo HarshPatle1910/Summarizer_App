@@ -1,30 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get.dart';
+import 'package:smart_summariser/consts/consts.dart';
+import 'package:smart_summariser/screens/summary/summary_screen.dart';
 
-import '../../consts/consts.dart';
 import '../../controllers/auth_controllers.dart';
+import '../auth_screen/login_screen.dart';
+import '../history/history_screen.dart';
+import '../profile/profile_screen.dart';
+import 'feature_card.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  final AuthController authController = Get.put(AuthController());
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  String userId = FirebaseAuth.instance.currentUser!.uid;
-  late Future<DocumentSnapshot> userFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    AuthController.instance.resetInactivityTimer(); // Reset session timer
-    AuthController.instance.startSessionTimer();
-    userFuture = fetchUserData(); // Fetch user data from Firestore
-  }
-
-  /// Fetch user data from Firestore
   Future<DocumentSnapshot> fetchUserData() async {
     return FirebaseFirestore.instance.collection('users').doc(userId).get();
   }
@@ -32,70 +21,191 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => AuthController.instance.resetInactivityTimer(),
+      onTap: () => authController.resetInactivityTimer(),
       child: SafeArea(
         child: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: FutureBuilder<DocumentSnapshot>(
-              future: userFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator()); // Loading
-                }
+          body: FutureBuilder<DocumentSnapshot>(
+            future: fetchUserData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                    child: Center(child: CircularProgressIndicator()));
+              }
 
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text("Error: ${snapshot.error}"),
-                  ); // Error
-                }
-
-                if (!snapshot.hasData || !snapshot.data!.exists) {
-                  return Center(child: Text("User data not found!")); // No data
-                }
-
-                // Extract user details
-                var userData = snapshot.data!;
-                String name = userData['name'] ?? 'User';
-                String email = userData['email'] ?? 'No Email';
-                String mobile = userData['mobile'] ?? 'No Mobile';
-                // String? profileImage = userData['profileImage']; // Optional
-
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              if (snapshot.hasError) {
+                return Center(
+                    child: Column(
                   children: [
-                    // Profile Image
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage:
-                          AssetImage(icUserLogo) as ImageProvider, // Default
-                    ),
-                    SizedBox(height: 16),
+                    Text("Error: ${snapshot.error}"),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: alreadyHaveAnAccount,
+                            style: TextStyle(
+                              fontFamily: bold,
+                              color: fontGrey,
+                            ),
+                          ),
+                          TextSpan(
+                            text: login,
+                            style: TextStyle(
+                              fontFamily: bold,
+                              color: orangeColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ).onTap(() {
+                      Get.to(LoginScreen());
+                    }),
+                  ],
+                ));
+              }
 
-                    // Welcome Message
+              if (!snapshot.hasData || !snapshot.data!.exists) {
+                return Center(
+                    child: Column(
+                  children: [
+                    Text("User data not found!"),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: alreadyHaveAnAccount,
+                            style: TextStyle(
+                              fontFamily: bold,
+                              color: fontGrey,
+                            ),
+                          ),
+                          TextSpan(
+                            text: login,
+                            style: TextStyle(
+                              fontFamily: bold,
+                              color: orangeColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ).onTap(() {
+                      Get.to(LoginScreen());
+                    }),
+                  ],
+                ));
+              }
+
+              var userData = snapshot.data!;
+              String name = userData['name'] ?? 'User';
+              String email = userData['email'] ?? 'No Email';
+              String mobile = userData['mobile'] ?? 'No Mobile';
+
+              return Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.text_snippet, color: orangeColor),
+                        SizedBox(width: 8),
+                        Text(
+                          appName,
+                          style: TextStyle(
+                            color: orangeColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(Icons.person, color: Colors.grey),
+                          onPressed: () {
+                            Get.to(() => ProfileScreen(
+                                name: name, email: email, mobile: mobile));
+                          },
+                        ),
+                      ],
+                    ),
+
+                    Divider(),
+
                     Text(
-                      // "Welcome, $name!",
-                      welcome + " $name!",
+                      appThemeText,
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: Colors.grey[800],
                       ),
                     ),
-                    SizedBox(height: 16),
 
-                    // User Details in a Paragraph Format
                     Text(
-                      "Hey $name! We're glad to have you here." +
-                          " Your registered email is $email," +
-                          " and we can reach you at $mobile." +
-                          " Stay connected and explore more features!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                      appThemeTextMessage,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: 20),
+                    // Buttons for New Summary and History
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Get.to(() => SummaryScreen());
+                            },
+                            icon: Icon(Icons.edit, color: Colors.white),
+                            label: Text(
+                              makeSummary,
+                              style: TextStyle(
+                                color: whiteColor,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: orangeColor,
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              textStyle: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Get.to(() => HistoryPage());
+                            },
+                            icon: Icon(
+                              Icons.history,
+                              color: darkFontGrey,
+                            ),
+                            label: Text(
+                              viewHistory,
+                              style: TextStyle(
+                                color: darkFontGrey,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: lightGrey,
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              textStyle: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                        .box
+                        .white
+                        .rounded
+                        .padding(EdgeInsets.all(16))
+                        .width(context.screenWidth)
+                        .shadow
+                        .make(),
+
+                    SizedBox(height: 20),
+                    // Session Timer
                     Obx(() {
-                      int minutesLeft =
-                          AuthController.instance.remainingTime.value;
+                      int minutesLeft = authController.remainingTime.value;
                       return Text(
                         minutesLeft > 0
                             ? "Session expires in: $minutesLeft min"
@@ -107,19 +217,49 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }),
 
-                    SizedBox(height: 30),
+                    // SizedBox(height: 20),
+                    Divider(),
 
-                    // Logout Button
-                    ElevatedButton(
-                      onPressed: () {
-                        AuthController.instance.signoutMethod();
-                      },
-                      child: Text("Logout"),
+                    // Features Section
+                    Text(
+                      features,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Expanded(
+                      // flex: 3,
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        children: [
+                          FeatureCard(
+                            icon: Icons.timer,
+                            title: saveTime,
+                            description: saveTimeDescription,
+                          ),
+                          FeatureCard(
+                            icon: Icons.file_present,
+                            title: multipleFormats,
+                            description: multipleFormatsDescription,
+                          ),
+                          FeatureCard(
+                            icon: Icons.security,
+                            title: secure,
+                            description: secureDescription,
+                          ),
+                          FeatureCard(
+                            icon: Icons.smart_toy,
+                            title: aiPowered,
+                            description: aiPoweredDescription,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

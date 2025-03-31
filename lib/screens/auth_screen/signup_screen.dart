@@ -39,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 (context.screenHeight * 0.1).heightBox,
                 appLogoWidget(),
                 10.heightBox,
-                "Join the $appname".text.fontFamily(bold).white.size(16).make(),
+                "Join the $appName".text.fontFamily(bold).white.size(16).make(),
                 20.heightBox,
                 Obx(
                   () => Column(
@@ -78,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {},
-                          child: forgetpassword.text.make(),
+                          child: forgetPassword.text.make(),
                         ),
                       ),
                       5.heightBox,
@@ -107,7 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     text: termsAndCondition,
                                     style: TextStyle(
                                       fontFamily: regular,
-                                      color: redColor,
+                                      color: orangeColor,
                                     ),
                                   ),
                                   TextSpan(
@@ -121,7 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     text: privacy,
                                     style: TextStyle(
                                       fontFamily: regular,
-                                      color: redColor,
+                                      color: orangeColor,
                                     ),
                                   ),
                                 ],
@@ -134,7 +134,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller.isloading.value
                           ? CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation(
-                                redColor,
+                                orangeColor,
                               ),
                             )
                           : ourButton(
@@ -200,7 +200,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   );
                                 }
                               },
-                              color: isCheck == true ? redColor : lightGrey,
+                              color: isCheck == true ? orangeColor : lightGrey,
                               textColor: whiteColor,
                               title: signup,
                             ).box.width(context.screenWidth - 50).make(),
@@ -219,7 +219,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               text: login,
                               style: TextStyle(
                                 fontFamily: bold,
-                                color: redColor,
+                                color: orangeColor,
                               ),
                             ),
                           ],

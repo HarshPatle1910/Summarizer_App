@@ -10,7 +10,7 @@ class ApiService {
     return await storage.read(key: "GEMINI_API_KEY") ?? "";
   }
 
-  Future<String> getSummary(String text) async {
+  Future<String> getSummary(String text, String mode) async {
     String apiKey = await getApiKey();
 
     if (apiKey.isEmpty) {
@@ -28,7 +28,13 @@ class ApiService {
         "contents": [
           {
             "parts": [
-              {"text": text + " Give me summary of above text"}
+              {
+                "text": text +
+                    " Give me summary of above text in given language using " +
+                    mode +
+                    " mode."
+              }
+              // {"text": text}
             ]
           }
         ]
