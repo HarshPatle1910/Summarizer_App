@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../consts/consts.dart';
+import '../screens/admin_panel/admin_screen.dart';
 import '../screens/auth_screen/login_screen.dart';
 
 class AuthController extends GetxController {
@@ -38,6 +39,14 @@ class AuthController extends GetxController {
     UserCredential? userCredential;
 
     try {
+      // Admin bypass
+      if (email == 'admin@gmail.com' && password == 'Admin@7890') {
+        VxToast.show(context, msg: 'Admin Logged In');
+        Get.offAll(() => AdminPanel()); // Make sure to import it
+        return null;
+      }
+
+      // Regular user login
       userCredential = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -68,12 +77,12 @@ class AuthController extends GetxController {
         password: password,
       );
 
-      String hashedPassword = hashPassword(password);
+      // String hashedPassword = hashPassword(password);
 
       await storeUserData(
         name: name,
         email: email,
-        password: hashedPassword,
+        password: password,
         mobile: mobile,
         userId: userCredential.user!.uid,
       );
@@ -133,17 +142,6 @@ class AuthController extends GetxController {
 
     return elapsedMinutes < sessionTimeoutMinutes;
   }
-  //
-  // /// ************** AUTO LOGIN **************
-  // Future<void> autoLogin() async {
-  //   bool sessionActive = await isSessionActive();
-  //   if (sessionActive) {
-  //     Get.offAll(() => HomeScreen());
-  //   } else {
-  //     await signoutMethod();
-  //     // Get.off(() => SplashScreen());
-  //   }
-  // }
 
   /// ************** SESSION TIMER **************
   void startSessionTimer() {
@@ -202,4 +200,15 @@ class AuthController extends GetxController {
       print("❌ Sign Out Failed: ${e.message}");
     }
   }
+  //
+  // Future<void> resetPassword(String email, BuildContext context) async {
+  //   try {
+  //     await auth.sendPasswordResetEmail(email: email);
+  //     Get.snackbar("Success", "Password reset link sent to $email",
+  //         backgroundColor: orangeColor, colorText: whiteColor);
+  //   } on FirebaseAuthException catch (e) {
+  //     Get.snackbar("Error", e.message ?? "Something went wrong",
+  //         backgroundColor: Colors.red, colorText: whiteColor);
+  //   }
+  // }
 }

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../../consts/consts.dart';
 import '../../controllers/auth_controllers.dart';
 import '../../widgets_common/our_button.dart';
-import '../history/history_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen(
@@ -21,26 +20,31 @@ class ProfileScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              _buildProfileHeader(),
-              SizedBox(height: 16),
-              _buildUserDetails(),
-              Divider(),
-              _buildMenuItems(),
-              Spacer(),
-              _buildHistoryButton(context),
-              SizedBox(height: 10),
-              _buildLogoutButton(context),
-            ],
-          )
-              .box
-              .white
-              .rounded
-              .padding(EdgeInsets.all(16))
-              .width(context.screenWidth)
-              .shadow
-              .make(),
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildProfileHeader(),
+                  SizedBox(height: 16),
+                  _buildUserDetails(),
+                  Divider(),
+                  _buildMenuItems(),
+                  SizedBox(height: 16), // Spacer replacement
+                  _buildHistoryButton(context),
+                  SizedBox(height: 10),
+                  _buildLogoutButton(context),
+                ],
+              )
+                  .box
+                  .white
+                  .rounded
+                  .padding(EdgeInsets.all(16))
+                  .width(context.screenWidth)
+                  .shadow
+                  .make(),
+            ),
+          ),
         ),
       ),
     );
@@ -48,11 +52,18 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildProfileHeader() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         CircleAvatar(radius: 30, backgroundImage: AssetImage(icUserLogo)),
         SizedBox(width: 10),
-        Text("Welcome, $name!",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+        Column(
+          children: [
+            Text("Welcome, ",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text("$name!",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          ],
+        ),
       ],
     );
   }
@@ -106,7 +117,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildHistoryButton(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => HistoryPage()),
+      // onTap: () => Get.to(() => HistoryPage()),
       child: Container(
         alignment: Alignment.center,
         width: MediaQuery.of(context).size.width,

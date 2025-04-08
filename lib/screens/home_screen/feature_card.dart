@@ -20,22 +20,33 @@ class FeatureCard extends StatelessWidget {
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 40, color: orangeColor),
-            SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 4),
-            Text(
-              description,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-            ),
-          ],
+        child: IntrinsicHeight(
+          // Ensures the column takes only the required height
+          child: Column(
+            mainAxisSize: MainAxisSize.max, // Prevents unnecessary expansion
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(icon, size: 40, color: orangeColor),
+              SizedBox(height: 8),
+              Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 4),
+              Flexible(
+                // Prevents text overflow
+                child: Text(
+                  description,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  // overflow:
+                  //     TextOverflow.ellipsis, // Adds "..." if text overflows
+                  maxLines: 3, // Limits lines to prevent overflow
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

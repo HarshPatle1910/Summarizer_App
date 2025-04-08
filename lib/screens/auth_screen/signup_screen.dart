@@ -74,13 +74,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: passwordRetypeController,
                         ispass: true,
                       ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: forgetPassword.text.make(),
-                        ),
-                      ),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: TextButton(
+                      //     onPressed: () {},
+                      //     child: forgetPassword.text.make(),
+                      //   ),
+                      // ),
                       5.heightBox,
                       Row(
                         children: [
@@ -227,6 +227,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ).onTap(() {
                         Get.to(LoginScreen());
                       }),
+                      SizedBox(
+                        height: 20,
+                      )
                     ],
                   )
                       .box

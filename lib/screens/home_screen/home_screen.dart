@@ -118,12 +118,15 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Spacer(),
-                        IconButton(
-                          icon: Icon(Icons.person, color: Colors.grey),
-                          onPressed: () {
-                            Get.to(() => ProfileScreen(
-                                name: name, email: email, mobile: mobile));
-                          },
+                        CircleAvatar(
+                          backgroundColor: lightGrey,
+                          child: IconButton(
+                            icon: Icon(Icons.person, color: orangeColor),
+                            onPressed: () {
+                              Get.to(() => ProfileScreen(
+                                  name: name, email: email, mobile: mobile));
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -147,6 +150,7 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 20),
                     // Buttons for New Summary and History
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: ElevatedButton.icon(
@@ -162,12 +166,14 @@ class HomeScreen extends StatelessWidget {
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: orangeColor,
-                              padding: EdgeInsets.symmetric(vertical: 16),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 16,
+                              ),
                               textStyle: TextStyle(fontSize: 16),
                             ),
                           ),
                         ),
-                        SizedBox(width: 16),
+                        SizedBox(width: 10),
                         Expanded(
                           child: ElevatedButton.icon(
                             onPressed: () {

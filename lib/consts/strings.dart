@@ -12,7 +12,7 @@ const passwordHint = "********";
 const confirmPassword = "Confirm password";
 const name = "Name";
 const nameHint = "Lightening Macqueen";
-const forgetPassword = "Forger password";
+const forgetPassword = "Forget password?";
 const login = "Login";
 const loggedIn = "Logged in successfully";
 const loggedOut = "Logged out successfully";
@@ -23,6 +23,7 @@ const loginWith = "Login with";
 const privacy = "Privacy Policy";
 const termsAndCondition = "Terms and Conditions";
 const alreadyHaveAnAccount = "Already have an account?";
+const resetPassword = "Reset Password";
 
 //home strings
 const welcome = "Welcome";

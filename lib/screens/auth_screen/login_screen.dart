@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:smart_summariser/screens/auth_screen/forgot_password_screen.dart';
 import 'package:smart_summariser/screens/auth_screen/signup_screen.dart';
 
 import '../../consts/consts.dart';
@@ -37,17 +38,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 (context.screenHeight * 0.1).heightBox,
                 appLogoWidget(),
                 10.heightBox,
-                "Log in to $appName"
-                    .text
-                    .fontFamily(bold)
-                    .white
-                    .size(16)
-                    .make(),
-                20.heightBox,
                 Obx(
                   () => Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      "Log in to $appName"
+                          .text
+                          .color(orangeColor)
+                          .fontFamily(semibold)
+                          .size(24)
+                          .make(),
+                      20.heightBox,
                       costumTextField(
                         title: mail,
                         hint: mailHint,
@@ -63,7 +64,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(ForgotPasswordScreen());
+                          },
                           child: forgetPassword.text.make(),
                         ),
                       ),

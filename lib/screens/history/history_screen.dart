@@ -1,23 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-// class HistoryPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Summary History'),
-//         backgroundColor: orangeColor,
-//       ),
-//       body: Center(
-//         child: Text(
-//           'This is where users can view their previous summaries.',
-//           style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:intl/intl.dart';
 import 'package:smart_summariser/screens/history/full_history_screen.dart';
 
@@ -128,7 +110,9 @@ class HistoryPage extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Summary Mode: ",
@@ -142,7 +126,12 @@ class HistoryPage extends StatelessWidget {
                                     height: 10,
                                   ),
                                   Text(
-                                    'Time: ${_formatTimestamp(item['timestamp'])}',
+                                    'Time:',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    ' ${_formatTimestamp(item['timestamp'])}',
                                   ),
                                 ],
                               ),

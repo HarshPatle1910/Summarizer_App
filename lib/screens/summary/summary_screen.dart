@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:get/get.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smart_summariser/consts/consts.dart';
@@ -16,7 +15,6 @@ import 'package:syncfusion_flutter_pdf/pdf.dart';
 import '../../bloc/summary/summary_bloc.dart';
 import '../../bloc/summary/summary_event.dart';
 import '../../bloc/summary/summary_state.dart';
-import '../history/history_screen.dart';
 
 class SummaryScreen extends StatefulWidget {
   @override
@@ -209,6 +207,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                               Container(
                                 child: IconButton(
                                   icon: Icon(
+                                    // size: 20,
                                     _isListening ? Icons.mic_off : Icons.mic,
                                     color: _isListening
                                         ? Colors.grey
@@ -232,7 +231,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                                         width: 2, color: orangeLightColor),
                                   ),
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 15),
+                                      horizontal: 5, vertical: 15),
                                   child: Text(
                                     "Pick PDF/Image File",
                                     style: TextStyle(color: Colors.black),
@@ -242,7 +241,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                               ),
                               GestureDetector(
                                   onTap: () {
-                                    Get.to(() => HistoryPage());
+                                    // Get.to(() => HistoryPage());
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -251,7 +250,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                                           width: 2, color: orangeLightColor),
                                     ),
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 15),
+                                        horizontal: 5, vertical: 15),
                                     child: Text(
                                       viewHistory,
                                       style: TextStyle(color: Colors.black),
@@ -385,6 +384,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                             ),
                             Container(
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
@@ -403,20 +403,45 @@ class _SummaryScreenState extends State<SummaryScreen> {
                                   SizedBox(
                                     height: 8,
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Summarized words: ${RegExp(r'\p{L}+', unicode: true).allMatches(state.summary).length}",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        ", Summarized sentences: ${state.summary.split(RegExp(r'[.!?।॥]')).where((s) => s.trim().isNotEmpty).length}",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
+                                  (MediaQuery.of(context).size.width < 200)
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Summarized words: ${RegExp(r'\p{L}+', unicode: true).allMatches(state.summary).length}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                                width:
+                                                    8), // Spacing between text elements
+                                            Text(
+                                              "Summarized sentences: ${state.summary.split(RegExp(r'[.!?।॥]')).where((s) => s.trim().isNotEmpty).length}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        )
+                                      : Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Summarized words: ${RegExp(r'\p{L}+', unicode: true).allMatches(state.summary).length}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                                height:
+                                                    4), // Spacing between text elements
+                                            Text(
+                                              "Summarized sentences: ${state.summary.split(RegExp(r'[.!?।॥]')).where((s) => s.trim().isNotEmpty).length}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
                                 ],
                               ),
                               padding: EdgeInsets.all(10),
