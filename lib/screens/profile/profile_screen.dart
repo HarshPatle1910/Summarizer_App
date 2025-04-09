@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../consts/consts.dart';
 import '../../controllers/auth_controllers.dart';
 import '../../widgets_common/our_button.dart';
+import '../history/history_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen(
@@ -57,6 +58,7 @@ class ProfileScreen extends StatelessWidget {
         CircleAvatar(radius: 30, backgroundImage: AssetImage(icUserLogo)),
         SizedBox(width: 10),
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Welcome, ",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
@@ -117,7 +119,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildHistoryButton(BuildContext context) {
     return GestureDetector(
-      // onTap: () => Get.to(() => HistoryPage()),
+      onTap: () => Get.to(() => HistoryPage()),
       child: Container(
         alignment: Alignment.center,
         width: MediaQuery.of(context).size.width,

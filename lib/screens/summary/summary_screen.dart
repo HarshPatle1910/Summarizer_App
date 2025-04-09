@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:get/get.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smart_summariser/consts/consts.dart';
@@ -15,6 +16,7 @@ import 'package:syncfusion_flutter_pdf/pdf.dart';
 import '../../bloc/summary/summary_bloc.dart';
 import '../../bloc/summary/summary_event.dart';
 import '../../bloc/summary/summary_state.dart';
+import '../history/history_screen.dart';
 
 class SummaryScreen extends StatefulWidget {
   @override
@@ -32,7 +34,9 @@ class _SummaryScreenState extends State<SummaryScreen> {
   bool _isPlaying = false;
   String _selectedMode = "Extractive"; // Default mode
 
-  // String _extractedText = "";
+  var enteredTextLine = "\n\nEntered text:\n";
+  var summaryLine = "\n\nSummary:\n";
+  var summaryMode = "Summary mode: ";
 
   @override
   void initState() {
@@ -141,7 +145,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
           'enteredText': enteredText,
           'summarizedText': summarizedText,
           'timestamp': DateTime.now(),
-          'userId': user.uid,
+          'userId': user!.uid,
           'email': user.email,
           'selectedMode': selectedMode
         };
@@ -241,7 +245,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                               ),
                               GestureDetector(
                                   onTap: () {
-                                    // Get.to(() => HistoryPage());
+                                    Get.to(() => HistoryPage());
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -336,19 +340,21 @@ class _SummaryScreenState extends State<SummaryScreen> {
                 BlocBuilder<SummaryBloc, SummaryState>(
                   builder: (context, state) {
                     if (state is SummaryLoading) {
-                      return Column(
-                        children: [
-                          Text(
-                            generatingSummary,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          CircularProgressIndicator(
-                            color: Color.fromRGBO(223, 109, 20, 1),
-                          ),
-                        ],
-                      );
+                      return Stack(children: [
+                        Column(
+                          children: [
+                            Text(
+                              generatingSummary,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            CircularProgressIndicator(
+                              color: Color.fromRGBO(223, 109, 20, 1),
+                            ),
+                          ],
+                        ),
+                      ]);
                     } else if (state is SummaryLoaded) {
                       return Container(
                         child: Column(
@@ -465,8 +471,13 @@ class _SummaryScreenState extends State<SummaryScreen> {
                                         color: darkFontGrey,
                                       ),
                                       onPressed: () {
-                                        Clipboard.setData(
-                                            ClipboardData(text: state.summary));
+                                        Clipboard.setData(ClipboardData(
+                                            text: summaryMode +
+                                                _selectedMode +
+                                                enteredTextLine +
+                                                _controller.text +
+                                                summaryLine +
+                                                state.summary));
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                                 content: Text(summaryCopieed)));
@@ -485,7 +496,12 @@ class _SummaryScreenState extends State<SummaryScreen> {
                                         color: darkFontGrey,
                                       ),
                                       onPressed: () {
-                                        Share.share(state.summary);
+                                        Share.share(summaryMode +
+                                            _selectedMode +
+                                            enteredTextLine +
+                                            _controller.text +
+                                            summaryLine +
+                                            state.summary);
                                       },
                                     ),
                                   ),

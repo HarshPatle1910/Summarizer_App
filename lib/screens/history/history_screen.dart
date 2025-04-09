@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_summariser/screens/history/full_history_screen.dart';
@@ -12,12 +13,21 @@ class HistoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchHistory();
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      fetchHistory(userId);
+    } else {
+      Get.snackbar('Error', 'User not logged in');
+    }
   }
 
-  void fetchHistory() async {
+  void fetchHistory(String userId) async {
     try {
-      final snapshot = await _firestore.collection('summaries').get();
+      final snapshot = await _firestore
+          .collection('summaries')
+          .where('userId', isEqualTo: userId)
+          .get();
+
       historyList.value = snapshot.docs
           .map((doc) => {
                 'id': doc.id,
@@ -31,8 +41,12 @@ class HistoryController extends GetxController {
 
   void deleteSummary(String id) async {
     try {
-      await _firestore.collection('summaries').doc(id).delete();
-      fetchHistory(); // Refresh the list
+      // await _firestore.collection('summaries').doc(id).delete();
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId != null) {
+        fetchHistory(userId);
+      }
+
       Get.snackbar('Success', 'Summary deleted successfully');
     } catch (e) {
       Get.snackbar('Error', 'Failed to delete summary: $e');
@@ -44,7 +58,11 @@ class HistoryController extends GetxController {
       await _firestore.collection('summaries').doc(id).update({
         'summarizedText': newText,
       });
-      fetchHistory(); // Refresh the list
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId != null) {
+        fetchHistory(userId);
+      }
+
       Get.snackbar('Success', 'Summary updated successfully');
     } catch (e) {
       Get.snackbar('Error', 'Failed to edit summary: $e');
@@ -68,7 +86,7 @@ class HistoryPage extends StatelessWidget {
       body: Obx(
         () => controller.historyList.isEmpty
             ? const Center(
-                child: Text('No history available'),
+                child: CircularProgressIndicator(),
               )
             : ListView.builder(
                 itemCount: controller.historyList.length,
