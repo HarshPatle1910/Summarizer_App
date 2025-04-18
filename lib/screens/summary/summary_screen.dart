@@ -57,38 +57,49 @@ class _SummaryScreenState extends State<SummaryScreen> {
   }
 
   void _startListening() async {
-    bool available = await _speech.initialize();
+    bool available = await _speech.initialize(
+      onStatus: (status) => debugPrint('Speech status: $status'),
+      onError: (error) => debugPrint('Speech error: $error'),
+    );
+
     if (available) {
       setState(() => _isListening = true);
-      _speech.listen(onResult: (result) {
-        setState(() {
-          _controller.text = result.recognizedWords;
-          _isPlaying = false;
-        });
-      });
+      _speech.listen(
+        onResult: (result) {
+          setState(() {
+            _controller.text = result.recognizedWords;
+            _isPlaying = false;
+          });
+        },
+        listenMode:
+            stt.ListenMode.dictation, // Optional: supports longer speech
+      );
+    } else {
+      Get.snackbar(
+          'Speech Not Available', 'Please check microphone permissions.');
     }
   }
 
   void _stopListening() {
-    setState(() => _isListening = false);
     _speech.stop();
+    setState(() => _isListening = false);
   }
 
   void toggleSpeech(String text) async {
     if (_isPlaying) {
       await _flutterTts.stop();
-      setState(() {
-        _isPlaying = false;
-      });
+      setState(() => _isPlaying = false);
     } else {
-      if (text.isNotEmpty) {
+      if (text.trim().isNotEmpty) {
         await _flutterTts.speak(text);
-        setState(() {
-          _isPlaying = true;
+        setState(() => _isPlaying = true);
+
+        _flutterTts.setCompletionHandler(() {
+          setState(() => _isPlaying = false);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("No summary available to speak")),
+          const SnackBar(content: Text("No summary available to speak")),
         );
       }
     }
@@ -171,6 +182,12 @@ class _SummaryScreenState extends State<SummaryScreen> {
   }
 
   @override
+  void dispose() {
+    _flutterTts.stop(); // Stop TTS when the widget is disposed
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -192,7 +209,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                         maxLines: 8,
                         controller: _controller,
                         decoration: InputDecoration(
-                          hintText: 'Enter text to summarize',
+                          hintText: 'Enter text to summarize.....',
                         ),
                       ),
                     ),
@@ -205,48 +222,35 @@ class _SummaryScreenState extends State<SummaryScreen> {
                       ),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                child: IconButton(
-                                  icon: Icon(
-                                    // size: 20,
-                                    _isListening ? Icons.mic_off : Icons.mic,
-                                    color: _isListening
-                                        ? Colors.grey
-                                        : darkFontGrey,
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: IconButton(
+                                    padding: EdgeInsets.all(15),
+                                    icon: Icon(
+                                      // size: 20,
+                                      _isListening ? Icons.mic_off : Icons.mic,
+                                      color: _isListening
+                                          ? Colors.grey
+                                          : darkFontGrey,
+                                    ),
+                                    onPressed: _isListening
+                                        ? _stopListening
+                                        : _startListening,
                                   ),
-                                  onPressed: _isListening
-                                      ? _stopListening
-                                      : _startListening,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      width: 2, color: orangeLightColor),
-                                ),
-                              ),
-                              GestureDetector(
-                                child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
                                         width: 2, color: orangeLightColor),
                                   ),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 15),
-                                  child: Text(
-                                    "Pick PDF/Image File",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
                                 ),
-                                onTap: _pickFile,
-                              ),
-                              GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => HistoryPage());
-                                  },
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
@@ -256,11 +260,34 @@ class _SummaryScreenState extends State<SummaryScreen> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 5, vertical: 15),
                                     child: Text(
-                                      viewHistory,
+                                      "Pick PDF/Image File",
                                       style: TextStyle(color: Colors.black),
                                     ),
-                                  )),
-                            ],
+                                  ),
+                                  onTap: _pickFile,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      Get.to(() => HistoryPage());
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            width: 2, color: orangeLightColor),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 15),
+                                      child: Text(
+                                        history,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    )),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 20,
@@ -311,7 +338,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     padding: EdgeInsets.symmetric(
-                                        vertical: 15, horizontal: 15),
+                                        vertical: 12, horizontal: 12),
                                     backgroundColor: orangeColor,
                                     foregroundColor: whiteColor,
                                   ),
@@ -362,6 +389,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
                           children: [
                             Container(
                               padding: EdgeInsets.all(10),
+                              width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 border: Border.all(
@@ -392,20 +420,39 @@ class _SummaryScreenState extends State<SummaryScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Entered words: ${RegExp(r'\p{L}+', unicode: true).allMatches(_controller.text).length}",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        ", Entered sentences: ${_controller.text.split(RegExp(r'[.!?।॥]')).where((s) => s.trim().isNotEmpty).length}",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
+                                  (MediaQuery.of(context).size.width < 200)
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Entered words: ${RegExp(r'\p{L}+', unicode: true).allMatches(_controller.text).length}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              ", Entered sentences: ${_controller.text.split(RegExp(r'[.!?।॥]')).where((s) => s.trim().isNotEmpty).length}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        )
+                                      : Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Entered words: ${RegExp(r'\p{L}+', unicode: true).allMatches(_controller.text).length}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              "Entered sentences: ${_controller.text.split(RegExp(r'[.!?।॥]')).where((s) => s.trim().isNotEmpty).length}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
                                   SizedBox(
                                     height: 8,
                                   ),

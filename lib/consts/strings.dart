@@ -32,8 +32,7 @@ const appThemeTextMessage = 'Effortlessly condense lengthy texts into precise, '
     'concise summaries with the power of AI. '
     'Save time, boost productivity, and stay informed—all in just one tap. '
     'Store your summaries, view history, and take control of your time like never before! ✨';
-const makeSummary = 'Make Summary';
-const viewHistory = 'View History';
+const history = 'History';
 const features = 'Features';
 const saveTime = 'Save Time';
 const saveTimeDescription = 'Instant summaries for lengthy texts.';

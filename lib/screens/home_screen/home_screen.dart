@@ -157,18 +157,21 @@ class HomeScreen extends StatelessWidget {
                             onPressed: () {
                               Get.to(() => SummaryScreen());
                             },
-                            icon: Icon(Icons.edit, color: Colors.white),
-                            label: Text(
-                              makeSummary,
-                              style: TextStyle(
-                                color: whiteColor,
+                            icon: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.white,
                               ),
+                            ),
+                            label: Text(
+                              summarize,
+                              style: TextStyle(color: whiteColor, fontSize: 16),
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: orangeColor,
                               padding: EdgeInsets.symmetric(
-                                vertical: 16,
-                              ),
+                                  vertical: 10, horizontal: 5),
                               textStyle: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -179,19 +182,22 @@ class HomeScreen extends StatelessWidget {
                             onPressed: () {
                               Get.to(() => HistoryPage());
                             },
-                            icon: Icon(
-                              Icons.history,
-                              color: darkFontGrey,
-                            ),
-                            label: Text(
-                              viewHistory,
-                              style: TextStyle(
+                            icon: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.history,
                                 color: darkFontGrey,
                               ),
                             ),
+                            label: Text(
+                              history,
+                              style:
+                                  TextStyle(color: darkFontGrey, fontSize: 16),
+                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: lightGrey,
-                              padding: EdgeInsets.symmetric(vertical: 16),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 5),
                               textStyle: TextStyle(
                                 fontSize: 16,
                               ),
@@ -203,25 +209,25 @@ class HomeScreen extends StatelessWidget {
                         .box
                         .white
                         .rounded
-                        .padding(EdgeInsets.all(16))
+                        .padding(EdgeInsets.all(10))
                         .width(context.screenWidth)
                         .shadow
                         .make(),
 
                     SizedBox(height: 20),
                     // Session Timer
-                    Obx(() {
-                      int minutesLeft = authController.remainingTime.value;
-                      return Text(
-                        minutesLeft > 0
-                            ? "Session expires in: $minutesLeft min"
-                            : "Session expired! Logging out...",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: minutesLeft > 5 ? Colors.green : Colors.red,
-                        ),
-                      );
-                    }),
+                    // Obx(() {
+                    //   int minutesLeft = authController.remainingTime.value;
+                    //   return Text(
+                    //     minutesLeft > 0
+                    //         ? "Session expires in: $minutesLeft min"
+                    //         : "Session expired! Logging out...",
+                    //     style: TextStyle(
+                    //       fontSize: 16,
+                    //       color: minutesLeft > 5 ? Colors.green : Colors.red,
+                    //     ),
+                    //   );
+                    // }),
 
                     // SizedBox(height: 20),
                     Divider(),

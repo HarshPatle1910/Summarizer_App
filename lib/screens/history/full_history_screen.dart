@@ -26,20 +26,26 @@ class _FullHistoryScreenState extends State<FullHistoryScreen> {
 
     if (text.isEmpty || text == 'N/A') {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("No summarized text available to read!")),
+        const SnackBar(content: Text("No summarized text available to read!")),
       );
       return;
     }
 
     if (isSpeaking) {
-      setState(() async {
+      await flutterTts.stop();
+      setState(() {
         isSpeaking = false;
-        await flutterTts.stop();
       });
     } else {
-      setState(() async {
+      await flutterTts.speak(text);
+      setState(() {
         isSpeaking = true;
-        await flutterTts.speak(text);
+      });
+
+      flutterTts.setCompletionHandler(() {
+        setState(() {
+          isSpeaking = false;
+        });
       });
     }
   }

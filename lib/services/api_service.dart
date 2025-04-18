@@ -29,10 +29,19 @@ class ApiService {
           {
             "parts": [
               {
-                "text": text +
-                    " Give me summary of above text in given language using " +
+                // "text": text +
+                //     "\n\nGive me summary of above text in given language using " +
+                //     mode +
+                //     " mode and highlight the main words." +
+                //     " If I asked any question then give answer like - 'Enter text to summarize...'."
+                "text": "You are a summarization tool. Only summarize the text I provide." +
+                    "\nUse the following mode for summarization: " +
                     mode +
-                    " mode."
+                    "\nHighlight the main keywords in the summary by making them bold." +
+                    "\nDo not answer any questions, give explanations, or respond to anything that is not a block of text." +
+                    "\nIf I ask a question or provide anything other than text to summarize, do not respond." +
+                    "\n\nText to summarize: " +
+                    text
               }
               // {"text": text}
             ]

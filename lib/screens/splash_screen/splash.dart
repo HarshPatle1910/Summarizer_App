@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
+import 'package:smart_summariser/screens/auth_screen/login_screen.dart';
 
 import '../../consts/consts.dart';
 import '../../controllers/auth_controllers.dart';
 import '../../widgets_common/applogo_widgets.dart';
-import '../auth_screen/signup_screen.dart';
 import '../home_screen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
       ); // Go to HomeScreen if session is active
     } else {
       Get.offAll(
-        () => const SignUpScreen(),
+        () => const LoginScreen(),
       ); // Go to SignUpScreen if no active session
     }
   }

@@ -138,9 +138,10 @@ class AuthController extends GetxController {
     if (lastActivity == null) return false;
 
     int currentTime = DateTime.now().millisecondsSinceEpoch;
-    int elapsedMinutes = (currentTime - lastActivity) ~/ (1000 * 60);
+    int oneMonthInMilliseconds =
+        30 * 24 * 60 * 60 * 1000; //session will end after 1 month.
 
-    return elapsedMinutes < sessionTimeoutMinutes;
+    return (currentTime - lastActivity) < oneMonthInMilliseconds;
   }
 
   /// ************** SESSION TIMER **************

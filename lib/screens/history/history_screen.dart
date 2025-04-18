@@ -26,6 +26,8 @@ class HistoryController extends GetxController {
       final snapshot = await _firestore
           .collection('summaries')
           .where('userId', isEqualTo: userId)
+          .orderBy('timestamp',
+              descending: true) // Set to false for ascending order
           .get();
 
       historyList.value = snapshot.docs
@@ -41,13 +43,19 @@ class HistoryController extends GetxController {
 
   void deleteSummary(String id) async {
     try {
-      // await _firestore.collection('summaries').doc(id).delete();
       final userId = FirebaseAuth.instance.currentUser?.uid;
-      if (userId != null) {
-        fetchHistory(userId);
-      }
 
-      Get.snackbar('Success', 'Summary deleted successfully');
+      if (userId != null) {
+        // Delete the summary by document ID
+        await _firestore.collection('summaries').doc(id).delete();
+
+        // Refresh the list after deletion
+        fetchHistory(userId);
+
+        Get.snackbar('Success', 'Summary deleted successfully');
+      } else {
+        Get.snackbar('Error', 'User not logged in');
+      }
     } catch (e) {
       Get.snackbar('Error', 'Failed to delete summary: $e');
     }
@@ -86,7 +94,7 @@ class HistoryPage extends StatelessWidget {
       body: Obx(
         () => controller.historyList.isEmpty
             ? const Center(
-                child: CircularProgressIndicator(),
+                child: Text("No history stored!"),
               )
             : ListView.builder(
                 itemCount: controller.historyList.length,

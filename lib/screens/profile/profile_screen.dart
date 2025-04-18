@@ -3,7 +3,11 @@ import 'package:get/get.dart';
 import '../../consts/consts.dart';
 import '../../controllers/auth_controllers.dart';
 import '../../widgets_common/our_button.dart';
+import '../about_app_screen/about_app_screen.dart';
 import '../history/history_screen.dart';
+import '../privacy_policy/privacy_policy_screen.dart';
+import '../review_screen/review_screen.dart';
+import '../terms_of_services/terms_of_services.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen(
@@ -30,7 +34,7 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(height: 16),
                   _buildUserDetails(),
                   Divider(),
-                  _buildMenuItems(),
+                  _buildMenuItems(context),
                   SizedBox(height: 16), // Spacer replacement
                   _buildHistoryButton(context),
                   SizedBox(height: 10),
@@ -78,29 +82,77 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItems() {
+  Widget _buildMenuItems(BuildContext context) {
     List<Map<String, dynamic>> menuItems = [
-      {'icon': Icons.settings, 'title': 'Settings'},
-      {'icon': Icons.privacy_tip_rounded, 'title': 'Privacy & Policy'},
-      {'icon': Icons.home_repair_service_rounded, 'title': 'Terms of Services'},
-      {'icon': Icons.info, 'title': 'About App'},
-      {'icon': Icons.reviews, 'title': 'Reviews'},
-      {'icon': Icons.rate_review, 'title': 'Rate Us'},
-      {'icon': Icons.mobile_screen_share, 'title': 'Share with Friends'},
-      {'icon': Icons.install_mobile, 'title': 'More Apps'},
+      {
+        'icon': Icons.settings,
+        'title': 'Settings',
+        'route': () {
+          // Example: open Play Store link or show dialog
+          print("Redirect to Play Store");
+        },
+      },
+      {
+        'icon': Icons.privacy_tip_rounded,
+        'title': 'Privacy & Policy',
+        'route': () => Navigator.push(
+            context, MaterialPageRoute(builder: (_) => PrivacyPolicyScreen())),
+      },
+      {
+        'icon': Icons.home_repair_service_rounded,
+        'title': 'Terms of Services',
+        'route': () => Navigator.push(
+            context, MaterialPageRoute(builder: (_) => TermsOfServiceScreen())),
+      },
+      {
+        'icon': Icons.info,
+        'title': 'About App',
+        'route': () => Navigator.push(
+            context, MaterialPageRoute(builder: (_) => AboutAppScreen())),
+      },
+      {
+        'icon': Icons.rate_review,
+        'title': 'Review & Rate Us',
+        'route': () => Navigator.push(
+            context, MaterialPageRoute(builder: (_) => ReviewsScreen())),
+      },
+      {
+        'icon': Icons.reviews,
+        'title': 'Users Reviews',
+        'route': () {
+          // Example: open Play Store link or show dialog
+          print("Redirect to Play Store");
+        },
+      },
+      {
+        'icon': Icons.mobile_screen_share,
+        'title': 'Share with Friends',
+        'route': () {
+          // Example: use Share plugin
+          print("Share the app");
+        },
+      },
+      {
+        'icon': Icons.install_mobile,
+        'title': 'More Apps',
+        'route': () {
+          // Example: redirect to developer page
+          print("Open More Apps");
+        },
+      },
     ];
 
     return Column(
       children: menuItems
-          .map((item) => _buildMenuItem(item['icon'], item['title']))
+          .map((item) =>
+              _buildMenuItem(item['icon'], item['title'], item['route']))
           .toList(),
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title) {
+  Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
     return GestureDetector(
-      onTap: () => Get.snackbar(title, '$title page coming soon!',
-          snackPosition: SnackPosition.TOP),
+      onTap: onTap,
       child: Padding(
         padding: EdgeInsets.all(12),
         child: Row(
@@ -128,7 +180,7 @@ class ProfileScreen extends StatelessWidget {
           border: Border.all(width: 2, color: orangeLightColor),
         ),
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: Text(viewHistory, style: TextStyle(color: Colors.black)),
+        child: Text(history, style: TextStyle(color: Colors.black)),
       ),
     );
   }
